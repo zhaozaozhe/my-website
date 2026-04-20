@@ -15,6 +15,23 @@
     <el-menu-item index="3">关于我</el-menu-item>
   </el-menu>
 
+  <el-row :gutter="20" style="margin: 20px 20px 40px 20px;">
+  <el-col :span="8">
+    <el-card shadow="hover">
+      <h3>关于我</h3>
+      <p>这里可以放你的个人简介或头像。</p>
+    </el-card>
+  </el-col>
+
+  <el-col :span="16">
+    <el-card shadow="hover">
+      <h3>最新作品</h3>
+      <p>这里展示你的 Vue 项目成果。</p>
+      <el-button type="info" plain>查看详情</el-button>
+    </el-card>
+  </el-col>
+</el-row>
+
   <div style="text-align: center; padding: 100px;">
     <h1>{{ mainTitle }}</h1>
     <p>欢迎来到我的个人空间，这里未来会放更多好玩的东西。</p>
