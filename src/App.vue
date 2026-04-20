@@ -1,19 +1,41 @@
 <template>
-  <div style="text-align: center; margin-top: 50px;">
-    <h1>我的新网站</h1>
-    <el-button type="primary">这是 Element Plus 的按钮</el-button>
-    <el-button type="success" round>圆角成功按钮</el-button>
+  <el-menu
+    mode="horizontal"
+    background-color="#545c64"
+    text-color="#fff"
+    active-text-color="#ffd04b"
+    :default-active="activeIndex"
+  >
+    <el-menu-item index="1">首页</el-menu-item>
+    <el-sub-menu index="2">
+      <template #title>我的项目</template>
+      <el-menu-item index="2-1">项目 A</el-menu-item>
+      <el-menu-item index="2-2">项目 B</el-menu-item>
+    </el-sub-menu>
+    <el-menu-item index="3">关于我</el-menu-item>
+  </el-menu>
+
+  <div style="text-align: center; padding: 100px;">
+    <h1>{{ mainTitle }}</h1>
+    <p>欢迎来到我的个人空间，这里未来会放更多好玩的东西。</p>
+    <el-button type="primary" @click="handleClick">点我试试</el-button>
   </div>
 </template>
 
 <script setup>
-// 注意：这里不要写任何 import HelloWorld 的语句
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+
+const activeIndex = ref('1')
+const mainTitle = ref('我的自主设计网站')
+
+const handleClick = () => {
+  ElMessage.success('恭喜！你已经学会使用 Element Plus 的反馈组件了！')
+}
 </script>
 
 <style>
-/* 简单的全局样式 */
 body {
-  margin: 0;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  margin: 0; /* 清除浏览器默认的外边距，让导航栏贴顶 */
 }
 </style>
