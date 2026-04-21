@@ -8,7 +8,7 @@
         <el-card shadow="hover" class="profile-card">
           <div class="profile-header">
             <el-avatar :size="90" src="public/favicon.ico" />
-            <h3 class="profile-name">赵哲</h3>
+            <h3 class="profile-name">threez</h3>
             <p class="profile-bio">
               正在学习 Vue 3 与前端开发，<br />
               记录技术成长与踩坑日常。
