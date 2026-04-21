@@ -1,1 +1,0 @@
-import{a as e,c as t,n,o as r,r as i,s as a,t as o}from"./index-B_PzDmTU.js";var s={};function c(o,s){let c=t(`el-empty`);return a(),e(n,null,[r(c,{description:`📝 学习笔记页面正在建设中`}),s[0]||=i(`p`,{style:{"text-align":`center`,color:`#909399`,"margin-top":`12px`}},` 下一步：这里将自动读取 Markdown 文件并渲染文章列表 `,-1)],64)}var l=o(s,[[`render`,c]]);export{l as default};

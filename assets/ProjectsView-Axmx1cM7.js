@@ -1,1 +1,0 @@
-import{c as e,i as t,s as n,t as r}from"./index-B_PzDmTU.js";var i={};function a(r,i){let a=e(`el-empty`);return n(),t(a,{description:`🚀 项目展示页面正在建设中`})}var o=r(i,[[`render`,a]]);export{o as default};
