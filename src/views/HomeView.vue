@@ -7,7 +7,7 @@
         <!-- 个人资料卡片 -->
         <el-card shadow="hover" class="profile-card">
           <div class="profile-header">
-            <el-avatar :size="90" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+            <el-avatar :size="90" src="public/favicon.ico" />
             <h3 class="profile-name">赵哲</h3>
             <p class="profile-bio">
               正在学习 Vue 3 与前端开发，<br />
