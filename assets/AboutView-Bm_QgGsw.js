@@ -1,0 +1,1 @@
+import{h as e,l as t,m as n,n as r}from"./index-zyfriB8Q.js";var i={};function a(r,i){let a=e(`el-empty`);return n(),t(a,{description:`👤 关于页面正在建设中`})}var o=r(i,[[`render`,a]]);export{o as default};
