@@ -26,6 +26,17 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/AboutView.vue')
+    },
+    // 新增：文章详情页动态路由
+    {
+      path: '/post/:slug', // :slug 对应文件名，比如 /post/my-first-post
+      name: 'post',
+      component: () => import('../views/PostView.vue')
     }
   ]
 })

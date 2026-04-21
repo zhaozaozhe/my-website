@@ -66,7 +66,11 @@
     <!-- 右侧主内容：文章卡片流，占 18/24（75%） -->
     <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
       <div class="post-list">
+        <!-- 如果没有文章，显示空状态 -->
+        <el-empty v-if="posts.length === 0" description="暂无文章，请在 content/notes 目录下添加 .md 文件" />
+        
         <el-card
+          v-else
           v-for="post in posts"
           :key="post.id"
           shadow="hover"
@@ -78,7 +82,7 @@
             <el-col :xs="24" :sm="24" :md="10" :lg="9" class="post-cover-wrap">
               <div
                 class="post-cover"
-                :style="{ backgroundImage: `url(${post.cover})` }"
+                :style="{ backgroundImage: `url(${post.cover || 'https://picsum.photos/seed/default/600/400'})` }"
               />
             </el-col>
             
@@ -92,13 +96,13 @@
               <div class="post-meta">
                 <span class="meta-item">
                   <el-icon><User /></el-icon>
-                  {{ post.author }}
+                  {{ post.author || '佚名' }}
                 </span>
                 <span class="meta-item">
                   <el-icon><Calendar /></el-icon>
                   {{ post.date }}
                 </span>
-                <el-tag size="small" effect="plain">{{ post.category }}</el-tag>
+                <el-tag v-if="post.category" size="small" effect="plain">{{ post.category }}</el-tag>
                 
                 <router-link :to="post.path" class="read-more">
                   阅读全文 <el-icon><ArrowRight /></el-icon>
@@ -115,59 +119,47 @@
 <script setup>
 import { ref } from 'vue'
 import { User, Calendar, ArrowRight } from '@element-plus/icons-vue'
+import fm from 'front-matter'
 
 // ==========================================
-// 模拟数据：下一步会替换为读取 Markdown 文件
+// 自动读取 Markdown 文件构建文章列表
 // ==========================================
-const posts = ref([
-  {
-    id: 1,
-    title: '关于本站',
-    summary: '欢迎光临！这是我的个人网站，用来存放学习笔记、技术博客和项目记录。网站基于 Vue 3 + Vite + Element Plus 构建，托管于 GitHub Pages，完全零成本。',
-    cover: 'https://picsum.photos/seed/site/600/400',
-    date: '2025-04-20',
-    author: '赵哲',
-    category: '关于',
-    path: '/notes'
-  },
-  {
-    id: 2,
-    title: 'Vue 3 组合式 API 入门心得',
-    summary: '从 Options API 切换到 Composition API 的思考过程。ref 和 reactive 到底用哪个？computed 和 watch 的使用场景有什么区别？本文记录了我的学习路线。',
-    cover: 'https://picsum.photos/seed/vue/600/400',
-    date: '2025-04-18',
-    author: '赵哲',
-    category: '前端',
-    path: '/notes'
-  },
-  {
-    id: 3,
-    title: 'GitHub Actions 自动化部署踩坑记',
-    summary: '从零开始配置 GitHub Actions，实现每次 push 到 main 分支后自动构建并部署到 gh-pages。记录了 base 路径配置、分支权限、构建缓存等踩坑点。',
-    cover: 'https://picsum.photos/seed/github/600/400',
-    date: '2025-04-15',
-    author: '赵哲',
-    category: '工具',
-    path: '/notes'
-  },
-  {
-    id: 4,
-    title: 'Element Plus 栅格与卡片布局实践',
-    summary: '如何使用 el-row / el-col 实现响应式侧边栏布局，以及 el-card 的 shadow、body-style 等属性的灵活运用。',
-    cover: 'https://picsum.photos/seed/ui/600/400',
-    date: '2025-04-12',
-    author: '赵哲',
-    category: '前端',
-    path: '/notes'
+
+// 使用 eager: true 模式，在 Vite 启动/打包时一次性获取所有文件的纯文本内容
+// 注意：路径别忘了根据你实际的目录结构调整，这里假设存放于 src/content/notes/
+const mdFiles = import.meta.glob('../content/notes/*.md', { query: '?raw', import: 'default', eager: true })
+
+const loadedPosts = Object.keys(mdFiles).map(filePath => {
+  const rawContent = mdFiles[filePath]
+  // 解析 Frontmatter 头部属性
+  const parsed = fm(rawContent)
+  // 从路径中提取文件名作为唯一标识 slug（例如 '../content/notes/vue3.md' -> 'vue3'）
+  const slug = filePath.match(/\/([^/]+)\.md$/)[1]
+  
+  return {
+    id: slug,
+    path: `/post/${slug}`, // 对应 router 中配置的文章详情页动态路由
+    ...parsed.attributes   // 展开 Markdown 头部定义的 title, summary, cover 等属性
   }
-])
+})
 
-const featuredPosts = ref([
-  { title: '关于本站', date: '04-20', path: '/notes' },
-  { title: 'Vue 3 组合式 API 入门心得', date: '04-18', path: '/notes' },
-  { title: 'GitHub Actions 自动化部署踩坑记', date: '04-15', path: '/notes' }
-])
+// 按照日期降序排序（最新的文章排在最前面）
+// 假设 date 格式为 "YYYY-MM-DD"
+loadedPosts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
 
+const posts = ref(loadedPosts)
+
+// 精选文章：这里演示动态获取前 3 篇文章。
+// 后续如果你的 md 文件头部有类似 `featured: true` 的标识，可以改为：
+// const featuredPosts = ref(loadedPosts.filter(p => p.featured).slice(0, 3).map(...))
+const featuredPosts = ref(loadedPosts.slice(0, 3).map(p => ({
+  title: p.title,
+  // 截取日期字符串，如果是 "YYYY-MM-DD" 格式，取 "MM-DD" 部分
+  date: p.date ? p.date.substring(5) : '', 
+  path: p.path
+})))
+
+// 友情链接（保持你原有的硬编码数据）
 const friendLinks = ref([
   { name: 'Vue.js 官方文档', url: 'https://cn.vuejs.org', desc: '渐进式 JavaScript 框架' },
   { name: 'Element Plus', url: 'https://element-plus.org', desc: '基于 Vue 3 的组件库' },
