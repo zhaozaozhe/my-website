@@ -7,7 +7,7 @@
         <!-- 个人资料卡片 -->
         <el-card shadow="hover" class="profile-card">
           <div class="profile-header">
-            <el-avatar :size="90" src="public/favicon.ico" />
+            <el-avatar :size="90" :src="webfavicon" />
             <h3 class="profile-name">threez</h3>
             <p class="profile-bio">
               正在学习 Vue 3 与前端开发，<br />
@@ -120,6 +120,8 @@
 import { ref } from 'vue'
 import { User, Calendar, ArrowRight } from '@element-plus/icons-vue'
 import fm from 'front-matter'
+// 1. 显式导入图片资源，Vite 会在打包时自动处理它的最终哈希路径和基础路径(base)
+import webfavicon from '../assets/favicon.ico'
 
 // ==========================================
 // 自动读取 Markdown 文件构建文章列表
