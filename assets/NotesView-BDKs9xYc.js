@@ -1,1 +1,0 @@
-import{c as e,f as t,h as n,m as r,n as i,s as a,u as o}from"./index-Daeyq-QC.js";var s={};function c(i,s){let c=n(`el-empty`);return r(),o(a,null,[t(c,{description:`📝 学习笔记页面正在建设中`}),s[0]||=e(`p`,{style:{"text-align":`center`,color:`#909399`,"margin-top":`12px`}},` 下一步：这里将自动读取 Markdown 文件并渲染文章列表 `,-1)],64)}var l=i(s,[[`render`,c]]);export{l as default};
