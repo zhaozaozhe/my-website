@@ -32,6 +32,22 @@
           </div>
         </el-card>
 
+        <!-- 🌟 新增：每日回顾 (Flomo Style) -->
+        <el-card v-if="randomFragment" shadow="hover" class="sidebar-section daily-review-card">
+          <template #header>
+            <div class="review-header">
+              <span class="section-title">💡 每日回顾</span>
+              <!-- 这个小巧的日期标签会显得很有设计感 -->
+              <el-tag size="small" type="info" effect="plain">{{ randomFragment.date }}</el-tag>
+            </div>
+          </template>
+          <div class="review-content">
+            <h4 class="review-title">{{ randomFragment.title }}</h4>
+            <!-- 这里简单地把 markdown 正文当作纯文本显示，如果想做得更好看，以后可以接一个极简的解析器 -->
+            <p class="review-text">{{ randomFragment.body }}</p>
+          </div>
+        </el-card>
+
         <!-- 精选文章 -->
         <el-card shadow="hover" class="sidebar-section">
           <template #header>
@@ -132,28 +148,45 @@ const mdFiles = import.meta.glob('../content/notes/*.md', { query: '?raw', impor
 
 const loadedPosts = Object.keys(mdFiles).map(filePath => {
   const rawContent = mdFiles[filePath]
-  // 解析 Frontmatter 头部属性
   const parsed = fm(rawContent)
-  // 从路径中提取文件名作为唯一标识 slug（例如 '../content/notes/vue3.md' -> 'vue3'）
   const slug = filePath.match(/\/([^/]+)\.md$/)[1]
   
   return {
     id: slug,
-    path: `/post/${slug}`, // 对应 router 中配置的文章详情页动态路由
-    ...parsed.attributes   // 展开 Markdown 头部定义的 title, summary, cover 等属性
+    path: `/post/${slug}`,
+    // 如果你在 md 里没写 type，为了兼容，默认给它一个 'article' 标记
+    type: parsed.attributes.type || 'article', 
+    body: parsed.body, // 把正文也拿出来，因为每日回顾需要显示正文内容
+    ...parsed.attributes
   }
 })
 
-// 按照日期降序排序（最新的文章排在最前面）
-// 假设 date 格式为 "YYYY-MM-DD"
+// 降序排序
 loadedPosts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
 
-const posts = ref(loadedPosts)
+// 🎯 【魔法在这里】数据分流！
+// 1. 过滤出真正的长文章（用来在右边列表显示）
+const articlePosts = loadedPosts.filter(post => post.type === 'article')
+const posts = ref(articlePosts) 
+
+// 2. 过滤出所有的“碎碎念”，做成一个池子
+const fragmentPosts = loadedPosts.filter(post => post.type === 'fragment')
+
+// 3. 实现“随机漫步/每日回顾”功能
+const randomFragment = ref(null) // 用来装抽中的那条数据
+
+if (fragmentPosts.length > 0) {
+  // 生成一个从 0 到 数组长度-1 的随机整数
+  const randomIndex = Math.floor(Math.random() * fragmentPosts.length)
+  // 把抽中的这条碎碎念塞给变量
+  randomFragment.value = fragmentPosts[randomIndex]
+}
+
 
 // 精选文章：这里演示动态获取前 3 篇文章。
 // 后续如果你的 md 文件头部有类似 `featured: true` 的标识，可以改为：
 // const featuredPosts = ref(loadedPosts.filter(p => p.featured).slice(0, 3).map(...))
-const featuredPosts = ref(loadedPosts.slice(0, 3).map(p => ({
+const featuredPosts = ref(articlePosts.slice(0, 3).map(p => ({
   title: p.title,
   // 截取日期字符串，如果是 "YYYY-MM-DD" 格式，取 "MM-DD" 部分
   date: p.date ? p.date.substring(5) : '', 
@@ -224,6 +257,36 @@ const friendLinks = ref([
   font-size: 12px;
   color: #909399;
   margin-top: 6px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.daily-review-card {
+  background-color: #fafbfc; /* 稍微给它一个浅浅的底色，以示区别 */
+  border-left: 4px solid #409EFF; /* 加一个左侧高亮条，类似引用的感觉 */
+}
+
+.review-title {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  color: #303133;
+}
+
+.review-text {
+  margin: 0;
+  font-size: 13px;
+  color: #606266;
+  line-height: 1.6;
+  /* 如果文字太长，让它最多显示 4 行 */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .sidebar-section {
