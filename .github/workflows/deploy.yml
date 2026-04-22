@@ -30,3 +30,4 @@ jobs:
         with:
           folder: dist # Vue 打包后的文件夹名
           branch: gh-pages # 部署到这个分支
+          clean: true
