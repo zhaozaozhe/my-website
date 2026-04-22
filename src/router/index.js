@@ -27,12 +27,13 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue')
     },
+    // 【新增】实验室/武器库路由
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+      path: '/lab',         // 当浏览器地址变成 /lab 时
+      name: 'lab',          // 给这个路由起个名字，方便以后调用
+      // 懒加载：用户只有点击这个页面，才会去下载这个页面的代码，让首页加载更快
+      component: () => import('../views/LabView.vue') 
     },
-    // 新增：文章详情页动态路由
     {
       path: '/post/:slug', // :slug 对应文件名，比如 /post/my-first-post
       name: 'post',

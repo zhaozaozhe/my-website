@@ -17,6 +17,7 @@
       <el-menu-item index="/notes">📝 学习笔记</el-menu-item>
       <el-menu-item index="/projects">🚀 项目展示</el-menu-item>
       <el-menu-item index="/about">👤 关于</el-menu-item>
+      <el-menu-item index="/lab">项目实验室</el-menu-item>
     </el-menu>
 
     <!-- 路由页面会在这里渲染 -->
