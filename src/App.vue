@@ -14,7 +14,7 @@
       <div class="nav-brand">我的个人网站</div>
       
       <el-menu-item index="/">🏠 首页</el-menu-item>
-      <el-menu-item index="/notes">📝 碎片记录</el-menu-item>
+      <el-menu-item index="/notes">📝 学习笔记</el-menu-item>
       <el-menu-item index="/projects">🚀 项目展示</el-menu-item>
       <el-menu-item index="/about">👤 关于</el-menu-item>
       <el-menu-item index="/lab">项目实验室</el-menu-item>
