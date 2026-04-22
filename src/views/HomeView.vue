@@ -9,9 +9,8 @@
           <div class="profile-header">
             <el-avatar :size="90" :src="webfavicon" />
             <h3 class="profile-name">threez</h3>
-            <p class="profile-bio">
-              正在学习 Vue 3 与前端开发，<br />
-              记录技术成长与踩坑日常。
+            <p class="profile-bio slogan">
+            " 思考，不思考，这是一个问题。"
             </p>
           </div>
           
@@ -201,6 +200,13 @@ const friendLinks = ref([
 .profile-stats {
   display: flex;
   justify-content: space-around;
+}
+
+.slogan {
+  font-style: italic; /* 斜体字，更像名言警句 */
+  color: #909399; /* 高级的灰色 */
+  font-weight: 500;
+  letter-spacing: 1px; /* 稍微增加字间距，更有呼吸感 */
 }
 
 .stat-item {
